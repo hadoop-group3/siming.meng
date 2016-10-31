@@ -1,11 +1,14 @@
 package Stocks;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.Calendar;
 
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
+import org.apache.hadoop.mapreduce.CounterGroup;
+import org.apache.hadoop.mapreduce.Counters;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -36,6 +39,7 @@ public class MR2Screener1 {
 			logger.info("In reduce()");
 			StringBuffer symbols = new StringBuffer();
 			double sectorTotalCap = 0.0;
+			int companyCount = 0;
 
 			for (Text value : values) {
 				logger.info("key=[" + key + "] value=" + value);
@@ -44,12 +48,13 @@ public class MR2Screener1 {
 				sectorTotalCap += new Double(capStr);
 
 				symbols.append(", " + symbolDetails[0]);
+				companyCount++;
 			}
 
-			Counter totalCompanies = context.getCounter(SECTOR_COUNT_LABEL, key.toString());
-
-			context.write(key, new Text(": Total Companies: " + totalCompanies.getValue() + "; Total Market Cap: $"
-					+ sectorTotalCap + "B SYMBOLS: " + symbols.toString()));
+			// Counter totalCompanies = context.getCounter(key.toString());
+			NumberFormat dFormat = NumberFormat.getCurrencyInstance();
+			context.write(key, new Text(": Total Companies: " + companyCount + "; Total Market Cap: "
+					+ dFormat.format(sectorTotalCap) + "B; SYMBOLS: " + symbols.toString()));
 		}
 
 	}
@@ -105,9 +110,9 @@ public class MR2Screener1 {
 				context.write(new Text(sectorStr), new Text(symbol + "===" + capStr));
 				// logger.info("Found a B-company");
 				context.getCounter(SECTOR_COUNT_LABEL, sectorStr).increment(1);
-				context.getCounter(SECTOR_COUNT_LABEL, "Totalcompanies processed successfully").increment(1);
+				context.getCounter(SECTOR_COUNT_LABEL, "Total companies processed successfully").increment(1);
 			}
-
+			context.getCounter(SECTOR_COUNT_LABEL, "Total companies attempted").increment(1);
 		}
 		/***
 		 * @Override protected void setup(Mapper<Object, Text, Text,
@@ -169,6 +174,17 @@ public class MR2Screener1 {
 		 * successfully, return 0. If not, return 1.
 		 */
 		boolean success = job.waitForCompletion(true);
+
+		// print the counters
+		Counters counters = job.getCounters();
+		for (CounterGroup group : counters) {
+			logger.info("* Counter Group: " + group.getDisplayName() + " (" + group.getName() + ")");
+			logger.info("  number of counters in this group: " + group.size());
+			for (Counter counter : group) {
+				logger.info("  - " + counter.getDisplayName() + ": " + counter.getName() + ": " + counter.getValue());
+			}
+		}
+
 		System.exit(success ? 0 : 1);
 	}
 }
