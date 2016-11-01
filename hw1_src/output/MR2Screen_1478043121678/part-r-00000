@@ -1,0 +1,65 @@
+Sector: "Basic Industries"	
+Symbols: "WDFC", "PAAS", "SRCL", "IOSP", "MEOH", "UFPI", "SHLM", "BCPC", "GPRE", "SCTY", "GOLD", "PRIM", "RGLD", "STLD"
+Total Companies: 14; 
+Total Market Cap: $46,350,000,000.00
+
+Sector: "Capital Goods"	
+Symbols: "AAON", "CSTE", "GRMN", "GNTX", "KLXI", "GSM", "THRM", "CPHD", "DORM", "GTLS", "KLAC", "KALU", "ROLL", "ITRI", "NDSN", "TSLA", "ABAX", "IART", "TRMB", "AXDX", "TRS", "APOG", "TASR", "FLIR", "ILMN", "IIVI", "MATW", "ATRO", "MTSC", "ARII", "AEIS", "ESLT", "MINI", "MKSI", "PCAR", "FEIC", "FDML", "OLED", "COHR", "CGNX", "BRKR"
+Total Companies: 41; 
+Total Market Cap: $188,320,000,000.00
+
+Sector: "Consumer Durables"	
+Symbols: "BEAV", "NTK", "SIAL", "CPRT", "RUSHA", "POOL", "LFUS", "FELE", "MLHR", "HELE", "CASY", "VWR", "SLGN", "SCSS", "IPHS", "GT", "TILE"
+Total Companies: 17; 
+Total Market Cap: $63,500,000,000.00
+
+Sector: "Consumer Non-Durables"	
+Symbols: "HAS", "FOSL", "LULU", "ENTG", "HAIN", "FIZZ", "MAT", "MNST", "MDLZ", "COLM", "LNCE", "COKE", "CTAS", "GIII", "CALM", "SHOO", "ICON", "WOOF", "SAFM", "IPAR", "CROX", "JJSF", "GMCR", "KRFT", "LANC", "UNFI", "PPC", "CORE"
+Total Companies: 28; 
+Total Market Cap: $249,660,000,000.00
+
+Sector: "Consumer Services"	
+Symbols: "GMLP", "VIA", "DISH", "DISCK", "SIRI", "LOPE", "DISCB", "DISCA", "GLPI", "QVCB", "AGNCB", "EXPO", "DTV", "CNV", "SPLS", "BLDR", "BWLD", "STRZB", "GK", "EXPE", "AMZN", "FAST", "CMCSA", "BOBE", "BLMN", "HDS", "BJRI", "MPEL", "HIBB", "HMIN", "FRGI", "HMHC", "PLAY", "BBBY", "BECN", "CONE", "MIK", "FCFS", "MSG", "WYNN", "WFM", "CAR", "SFM", "TW", "MNRO", "HSNI", "CMCSK", "HURN", "IACI", "MFRM", "SHLD", "OUTR", "ASNA", "SCHL", "PAYX", "TSCO", "UHAL", "ARCP", "ESND", "SBAC", "VDTH", "ARCPP", "APOL", "CSAL", "MAR", "NFLX", "MANT", "DLTR", "ZU", "NSIT", "TFM", "FINL", "SBRA", "CRWN", "WEN", "NWS", "NWSA", "LMCA", "ROST", "NXST", "ROIC", "ISCA", "EGOV", "IRCP", "LMCB", "NCLH", "RRGB", "LMCK", "ABGB", "AGNC", "TTEK", "CAKE", "JACK", "JD", "TOUR", "PZZA", "FOX", "ODP", "PNRA", "URBN", "TXRH", "LAMR", "AMCX", "LKQ", "LBRDA", "LBRDK", "FOXA", "LBTYA", "FIVE", "CONN", "PSMT", "PINC", "LBTYB", "STRZA", "LBTYK", "ULTA", "ANDE", "PCH", "LVNTA", "SBUX", "PLKI", "LVNTB", "SONC", "CBRL", "COST", "ABCO", "QVCA", "PENN", "ORLY", "ENT", "PLCE", "DWA", "SBGI", "CHTR", "HTHT", "VIAB", "CHDN", "CMCT", "DNKN", "GOGO", "GLNG", "CDW"
+Total Companies: 142; 
+Total Market Cap: $1,804,200,000,000.00
+
+Sector: "Energy"	
+Symbols: "IEP", "PTEN", "PDCE", "CRZO", "LINE", "ROSE", "VNR", "GPOR", "CLMT", "AHGP", "MGEE", "MRD", "ARLP", "WWD", "MEMP", "FANG", "MMLP", "LNCO", "HOLI", "VNOM"
+Total Companies: 20; 
+Total Market Cap: $52,730,000,000.00
+
+Sector: "Finance"	
+Symbols: "ESGR", "ECPG", "STFC", "EWBC", "EGBN", "ETFC", "CVBF", "SSB", "CACC", "CBSHP", "CBSH", "COLB", "CIGI", "SLM", "CME", "CINF", "CHFC", "SFNC", "CBOE", "CATY", "CTRX", "CFFN", "CBF", "ZION", "SBNY", "ANAT", "BPFH", "BOKF", "BOFI", "HAWK", "BGCP", "BNCL", "BBCN", "OZRK", "BANF", "SIGI", "SEIC", "AGII", "ACGL", "AFSI", "STBA", "RNST", "PVTB", "PRAA", "BPOP", "UCBI", "UBSI", "PNFP", "PBCT", "UBSH", "UMPQ", "PACW", "UMBF", "WETF", "ONB", "TRMK", "NTRS", "WTFC", "NBTB", "NAVI", "NPBC", "NGHC", "MORN", "NAVG", "NDAQ", "WABC", "MBFI", "MRKT", "MKTX", "MHLD", "LPLA", "CG", "TFSL", "LTXB", "KRNY", "WSBC", "TCBI", "ISBC", "IILG", "IBOC", "IBKR", "INDB", "IBKC", "HBAN", "HCBK", "TLMR", "HOMB", "TROW", "HBHC", "GGAL", "WAFD", "GBCI", "FULT", "SIVB", "FSV", "FMER", "SUSQ", "FNFG", "FMBI", "FIBK", "FFIN", "FFBC", "FCNCA", "FNGN", "FITB", "VRTS", "VIRT", "EEFT", "ERIE", "NWBI"
+Total Companies: 110; 
+Total Market Cap: $428,170,000,000.00
+
+Sector: "Health Care"	
+Symbols: "FMI", "CNMD", "ABMD", "ZLTQ", "MACK", "KERX", "FWP", "THRX", "THOR", "MGNX", "MDXG", "MDVN", "TRNX", "MDCO", "MGLN", "MNTA", "PDCO", "MYL", "MYGN", "MASI", "BABY", "NKTR", "NEOG", "PDLI", "JUNO", "ONCE", "NBIX", "MNKD", "ESRX", "DYAX", "PAHC", "JAZZ", "RDUS", "TTPH", "RPTP", "ALDR", "RCPT", "REGN", "ISIS", "ALXN", "ALGN", "ALKS", "RLYP", "DXCM", "IRWD", "AGIO", "OPHT", "ISRG", "LPNT", "ITCI", "EGRX", "TSRO", "RGEN", "PTLA", "RTRX", "ADRO", "ICPT", "EXAS", "PRAH", "RARE", "ACHN", "SAGE", "INSY", "PODD", "INSM", "AMGN", "FOLD", "AMSG", "ANAC", "SRPT", "NUVA", "ENDP", "INCY", "INCR", "IPXL", "IMGN", "ARNA", "KANG", "ARIA", "IDXX", "ICUI", "UTHR", "ICLR", "WMGI", "CYBX", "ATRA", "ACOR", "SCAI", "ZGNX", "ENSG", "SGEN", "MCRB", "PRTA", "HZNP", "BCRX", "PRXL", "AMED", "HOLX", "BIIB", "LDRH", "DBVT", "BMRN", "BRLI", "HSIC", "TECH", "HTWR", "ALNY", "AKRX", "HCSG", "PTCT", "AMAG", "NVAX", "ZSPH", "FGEN", "HALO", "GWPH", "BLUE", "QGEN", "SHPG", "PCRX", "GRFS", "VRTX", "KYTH", "LGND", "XRAY", "WBA", "ACAD", "CELG", "CLDX", "CEMP", "CMRX", "DEPO", "GILD", "CBPO", "ACHC", "SIRO", "ZIOP", "CLVS", "GLPG", "CHRS", "ESPR", "NLNK", "KITE"
+Total Companies: 143; 
+Total Market Cap: $1,292,480,000,000.00
+
+Sector: "Miscellaneous"	
+Symbols: "WBMD", "QIWI", "CTRP", "QUNR", "RRD", "RENT", "EXLS", "IDCC", "ROVI", "Z", "ATHN", "ETSY", "EBAY", "HMSY", "HQY", "GAME", "STMP", "SFLY", "CATM", "GPRO", "CDK", "CMPR", "SCOR", "PCLN", "MELI", "LABL", "CSGP", "NTES", "WSTC", "AKAM"
+Total Companies: 30; 
+Total Market Cap: $248,040,000,000.00
+
+Sector: "Public Utilities"	
+Symbols: "VIP", "CNSL", "FTR", "BBRY", "EQIX", "ATNI", "PEGI", "INFN", "EXLP", "TERP", "AMOV", "CAFD", "ABY", "OTTR", "ECOL", "PLCM", "NTGR", "VOD"
+Total Companies: 18; 
+Total Market Cap: $222,690,000,000.00
+
+Sector: "Technology"	
+Symbols: "VNET", "ZBRA", "YY", "YNDX", "YHOO", "XLNX", "WPPGY", "WDC", "WB", "WWWW", "VRTU", "VSAT", "VRSK", "VRSN", "VRNT", "VECO", "VDSI", "UBNT", "TRIP", "TSEM", "ULTI", "MIDD", "DSGX", "TXN", "TSRA", "TTEC", "TECD", "TTWO", "SYNT", "SNPS", "SNCR", "SYNA", "SYMC", "SYKE", "SMCI", "SPWR", "SSYS", "SSNC", "SPLK", "SEDG", "SOHU", "SWKS", "SINA", "SPIL", "SIMO", "SLAB", "SMTC", "STX", "SGMS", "SCSC", "SANM", "SNDK", "SABR", "RCII", "RP", "RMBS", "QLYS", "QCOM", "QRVO", "QLGC", "QLIK", "PTC", "PFPT", "PRGS", "POWI", "PMCS", "PLXS", "PEGA", "PCTY", "OSIS", "OTEX", "ON", "OVTI", "OMCL", "NXPI", "NVDA", "NUAN", "NICE", "NTCT", "NTAP", "NATI", "MPWR", "MOMO", "MITL", "MSTR", "MSFT", "MSCC", "MU", "MCHP", "MENT", "MLNX", "MDSO", "MDAS", "MXIM", "MRVL", "MKTO", "MANH", "MTSI", "LORL", "LOGM", "LOGI", "LLTC", "LECO", "LTRPB", "LTRPA", "LRCX", "ZNGA", "JDSU", "JKHY", "JCOM", "IPGP", "INTU", "ISIL", "INTC", "IDTI", "INOV", "INFA", "HDP", "AWAY", "HIMX", "HQCL", "GRPN", "GOOGL", "GOOG", "FTNT", "FLEX", "FISV", "FSLR", "FEYE", "FNSR", "FCS", "FB", "FFIV", "ERIC", "EIGI", "EFII", "EA", "SATS", "EBIX", "DIOD", "TRAK", "CY", "CYBR", "CSRE", "CSGS", "CRTO", "CREE", "CRAY", "CSOD", "CVLT", "COMM", "CTSH", "CCOI", "CTXS", "CSCO", "CRUS", "CHKP", "CYOU", "CERN", "CAVM", "CSIQ", "CDNS", "CCMP", "CA", "BRCD", "BRCM", "EPAY", "BLKB", "BNFT", "BIDU", "AVGO", "ADP", "ADSK", "ATML", "AZPN", "ASML", "ASMI", "ARRS", "ARMH", "AMAT", "AAPL", "ANSS", "ADI", "AMKR", "DOX", "AMBA", "AYA", "ALTR", "MDRX", "ADVS", "AMD", "ADBE", "ACXM", "ATVI", "ACIW", "JOBS", "TWOU"
+Total Companies: 197; 
+Total Market Cap: $3,818,070,000,000.00
+
+Sector: "Transportation"	
+Symbols: "FWRD", "SAVE", "HA", "HUBG", "VA", "WERN", "JBHT", "JBLU", "RYAAY", "LSTR", "ODFL", "AAWW", "CHRW", "AIRM", "OMAB", "ALGT", "AAL", "EXPD", "HTLD"
+Total Companies: 19; 
+Total Market Cap: $111,870,000,000.00
+
+Sector: "n/a"	
+Symbols: "VNQI", "VCIT", "VMBS", "VCSH", "ACWX", "ACWI", "AAXJ", "IBB", "OPB", "VTIP", "BNDX", "QQQ", "VXUS", "PSEC", "AINV", "ARCC", "ACAS", "CSQ", "CXRX", "FV", "MDIV", "PRFZ"
+Total Companies: 22; 
+Total Market Cap: $115,660,000,000.00
+

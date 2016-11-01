@@ -42,9 +42,9 @@ public class MR2Screener1 {
 			int companyCount = 0;
 
 			for (Text value : values) {
-				logger.info("key=[" + key + "] value=" + value);
+				//logger.info("key=[" + key + "] value=" + value);
 				String[] symbolDetails = value.toString().split("===");
-				String capStr = symbolDetails[1].substring(1, symbolDetails[1].length() - 1);
+				String capStr = symbolDetails[1];
 				sectorTotalCap += new Double(capStr);
 
 				symbols.append(", " + symbolDetails[0]);
@@ -52,9 +52,13 @@ public class MR2Screener1 {
 			}
 
 			// Counter totalCompanies = context.getCounter(key.toString());
+			Text KEY = new Text("Sector: " + key);
 			NumberFormat dFormat = NumberFormat.getCurrencyInstance();
-			context.write(key, new Text(": Total Companies: " + companyCount + "; Total Market Cap: "
-					+ dFormat.format(sectorTotalCap) + "B; SYMBOLS: " + symbols.toString()));
+			StringBuffer finalOutput = new StringBuffer();
+			finalOutput.append("\nSymbols: "+ symbols.toString().substring(2, symbols.length()));
+			finalOutput.append("\nTotal Companies: "+ companyCount + "; \nTotal Market Cap: "
+					+ dFormat.format(sectorTotalCap) );
+			context.write(KEY, new Text(finalOutput.toString()+"\n"));
 		}
 
 	}
@@ -79,6 +83,7 @@ public class MR2Screener1 {
 		private final static int sectorIndex = 5;
 		private final static int capIndex = 3;
 		public final static String NO_INFO = "n/a";
+		private final double BILLION = 1000000000.0;
 
 		@Override
 		protected void cleanup(/* Mapper<Object, Text, Text, Text>. */Context context)
@@ -107,10 +112,12 @@ public class MR2Screener1 {
 
 			if (tokens.length == 9 && !tokens[1].equalsIgnoreCase("Sector") && !sectorStr.equalsIgnoreCase(NO_INFO)
 					&& capStr.endsWith("B")) {
-				context.write(new Text(sectorStr), new Text(symbol + "===" + capStr));
+				capStr = (capStr.substring(1, capStr.length())).replaceAll("B", "");
+				double finalCap = new Double(capStr);
+				context.write(new Text(sectorStr), new Text(symbol + "===" + finalCap * BILLION));
 				// logger.info("Found a B-company");
 				context.getCounter(SECTOR_COUNT_LABEL, sectorStr).increment(1);
-				context.getCounter(SECTOR_COUNT_LABEL, "Total companies processed successfully").increment(1);
+				context.getCounter(SECTOR_COUNT_LABEL, "Total Billion Companies processed successfully").increment(1);
 			}
 			context.getCounter(SECTOR_COUNT_LABEL, "Total companies attempted").increment(1);
 		}
