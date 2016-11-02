@@ -85,15 +85,6 @@ public class MR2Screener1 {
 		public final static String NO_INFO = "n/a";
 		private final double BILLION = 1000000000.0;
 
-		@Override
-		protected void cleanup(/* Mapper<Object, Text, Text, Text>. */Context context)
-				throws IOException, InterruptedException {
-			// context.write(new Text("Nothing to view here - all the info isin
-			// the counters."), Text.get());
-			logger.info("in cleanup()");
-			super.cleanup(context);
-		}
-
 		/*-
 		 * This function splits each input line into an array of words.
 		 * For each word in the array is output as <word, 1>
