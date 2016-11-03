@@ -12,8 +12,11 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.PairFunction;
+import org.apache.spark.api.java.function.MapFunction;
 
 import scala.Tuple2;
+
+import org.apache.hadoop.io.Text;
 import org.apache.log4j.Logger;
 	
 public class Spark2Screener1 {
@@ -39,23 +42,51 @@ public class Spark2Screener1 {
 		// parse the input line into an array of symbols
 		JavaRDD<String> symbol = inputPath.flatMap(new FlatMapFunction<String, String>() {
 			private final static String recordRegex = ",(?=([^\"]*\"[^\"]*\")*[^\"]*$)";
+			private final static int capIndex = 3;
+			private final static int sectorIndex = 5;
+			public final static String NO_INFO = "n/a";
 			@Override
 			public Iterable<String> call(String s) throws Exception {
+				// initial screen
+				logger.info("Iterable<String> call(String s) s=["+s);
 				String[] tokens = s.split(recordRegex, -1);
-				return Arrays.asList(tokens);
+				String symbol = tokens[0];
+				String sectorStr = tokens[sectorIndex];
+				String capStr = tokens[capIndex].replace("\"", "");
+				String[] finalTokens=new String[1];
+				
+				if (tokens.length != 9 || symbol.equalsIgnoreCase("Symbol") || tokens[sectorIndex].equalsIgnoreCase("Sector") 
+						|| sectorStr.equalsIgnoreCase(NO_INFO) || !capStr.endsWith("B")) {
+					finalTokens[0] = "";
+				}
+				else
+					finalTokens[0] = s; // PASS IT ON
+				return Arrays.asList(finalTokens);
 			}
 		});
 
 		// define mapToPair to create pairs of <word, 1>
-		JavaPairRDD<String, String> pairs = symbol.mapToPair(new PairFunction<Object, String, String>() {
+		JavaPairRDD<String, String> pairs = symbol.mapToPair(new PairFunction<String, String, String>() {
+			private final static String recordRegex = ",(?=([^\"]*\"[^\"]*\")*[^\"]*$)";
 			private final static int sectorIndex = 5;
 			private final static int capIndex = 3;
 			public final static String NO_INFO = "n/a";
 			private final double BILLION = 1000000000.0;
 			@Override
-			public Tuple2<String, String> call(Object tokens) throws Exception {
-				String[] tkns = (String[])tokens;
-				return new Tuple2<String, String>(tkns[sectorIndex], tkns[0]+ "|||"+tkns[capIndex]);
+			public Tuple2<String, String> call(String value) throws Exception {
+				if (value == null || value.isEmpty())
+					return new Tuple2<String, String>("","");
+				
+				String[] tokens = value.toString().split(recordRegex, -1);
+				String symbol = tokens[0];
+				String sectorStr = tokens[5];
+				String capStr = tokens[capIndex].replace("\"", "");
+				capStr = (capStr.substring(1, capStr.length())).replaceAll("B", "");
+				double finalCap = new Double(capStr);
+				String finalValue= symbol + "===" + finalCap * BILLION;
+				
+				logger.info("Tuple2 call() tokens=["+ tokens);
+				return new Tuple2<String, String>(sectorStr,finalValue);
 			}
 		});
 
@@ -67,11 +98,12 @@ public class Spark2Screener1 {
 		JavaPairRDD<String, String> counts = pairs.reduceByKey(new Function2<String, String, String>() {
 			@Override
 			public String call(String a, String b) throws Exception {
-				return a + b;
+				logger.info("reduceByKey a=[" + a + "] b=["+ b);
+				return a + ", "+ b;
 			}
 		});
 
-		JavaPairRDD<String, Integer> sortedCounts = counts.sortByKey();
+		JavaPairRDD<String, String> sortedCounts = counts.sortByKey();
 
 		/*-
 		 * start the job by indicating a save action
