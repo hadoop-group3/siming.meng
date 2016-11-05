@@ -2,6 +2,7 @@ package Stocks;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 
@@ -96,10 +97,58 @@ public class Spark2Screener1 {
 		 * The operation reduces all values for each key to one value.
 		 */
 		JavaPairRDD<String, String> counts = pairs.reduceByKey(new Function2<String, String, String>() {
+			private double sectorTotalCap = 0.0;
+			private int companyCount = 0;
+			final String separator = "===";
+			final String companyCountStr = "\nTotal Companies: ";
+			final String sectorTotalCapStr = "\nTotal Market Cap: ";
+
 			@Override
 			public String call(String a, String b) throws Exception {
 				logger.info("reduceByKey a=[" + a + "] b=["+ b);
-				return a + ", "+ b;
+				if (a.isEmpty() && b.isEmpty())
+					return "";
+				else
+				{	
+					String aSymbol = parseSymbolAddCap(a);
+					String bSymbol = parseSymbolAddCap(b);
+					return updateSummaryForSector(aSymbol, bSymbol);
+				}
+			}
+			private String updateSummaryForSector(String a, String bSymbol)
+			{
+				String outputString;
+				if (a== null || a.isEmpty())
+					return bSymbol;
+				int pos = a.indexOf(this.companyCountStr);
+				if (pos > 0) //  found-> remove the old summary report, insert bSymbol here.
+					outputString = a.substring(0, pos) + ", " + bSymbol;
+				else 
+					outputString = a + ", " + bSymbol;
+				
+				// Append summary report for this sector so far
+				outputString += companyCountStr + companyCount;
+				NumberFormat dFormat = NumberFormat.getCurrencyInstance();
+				outputString +=  sectorTotalCapStr + dFormat.format(sectorTotalCap) ;
+				
+				return outputString;
+			}
+			private String parseSymbolAddCap(String value) {
+				if (value == null || value.isEmpty())
+					return "";
+				
+				if (value.indexOf(separator)<0) // existing string w/o the separator. so return w/o processing
+					return value;
+				String symbol = "";
+				String[] symbolDetails = value.toString().split(separator);
+				
+				String capStr = symbolDetails[1];
+				symbol = symbolDetails[0];
+				
+				sectorTotalCap += new Double(capStr);
+				companyCount++;
+				
+				return symbol;
 			}
 		});
 
