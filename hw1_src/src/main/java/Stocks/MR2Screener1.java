@@ -36,7 +36,7 @@ public class MR2Screener1 {
 		@Override
 		public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
-			logger.info("In reduce()");
+			//logger.info("In reduce()");
 			StringBuffer symbols = new StringBuffer();
 			double sectorTotalCap = 0.0;
 			int companyCount = 0;
@@ -44,7 +44,15 @@ public class MR2Screener1 {
 			for (Text value : values) {
 				//logger.info("key=[" + key + "] value=" + value);
 				String[] symbolDetails = value.toString().split("===");
+				
+				if (!values.iterator().hasNext() && symbolDetails.length<2)
+				{
+					String overallCompanyCntLabel = "Total companies attempted";
+					context.write(new Text(overallCompanyCntLabel), new Text(symbolDetails[0]));
+					return;
+				}
 				String capStr = symbolDetails[1];
+				
 				sectorTotalCap += new Double(capStr);
 
 				symbols.append(", " + symbolDetails[0]);
@@ -60,7 +68,6 @@ public class MR2Screener1 {
 					+ dFormat.format(sectorTotalCap) );
 			context.write(KEY, new Text(finalOutput.toString()+"\n"));
 		}
-
 	}
 
 	/**
@@ -137,6 +144,17 @@ public class MR2Screener1 {
 		 *           //super.setup(context); Configuration conf =
 		 *           context.getConfiguration(); sector = }
 		 ***/
+
+		@Override
+		protected void cleanup(Mapper<Object, Text, Text, Text>.Context context)
+				throws IOException, InterruptedException {
+			super.cleanup(context);
+				
+			String overallCompanyCntLabel = "Total companies attempted";
+			Counter counter = context.getCounter(SECTOR_COUNT_LABEL, overallCompanyCntLabel);
+			
+			context.write(new Text(overallCompanyCntLabel), new Text(""+counter.getValue()));
+		}
 	}
 
 	/**
@@ -190,16 +208,6 @@ public class MR2Screener1 {
 		 * successfully, return 0. If not, return 1.
 		 */
 		boolean success = job.waitForCompletion(true);
-
-		// print the counters
-		Counters counters = job.getCounters();
-		for (CounterGroup group : counters) {
-			logger.info("* Counter Group: " + group.getDisplayName() + " (" + group.getName() + ")");
-			logger.info("  number of counters in this group: " + group.size());
-			for (Counter counter : group) {
-				logger.info("  - " + counter.getDisplayName() + ": " + counter.getName() + ": " + counter.getValue());
-			}
-		}
 
 		System.exit(success ? 0 : 1);
 	}
