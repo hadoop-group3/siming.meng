@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -22,7 +23,11 @@ import org.apache.log4j.Logger;
 	
 public class Spark2Screener1 {
 	static Logger logger = Logger.getLogger(Spark2Screener1.class);
-
+	final private static String separator = "===";
+	public final static String NO_INFO = "n/a";
+	public final static double BILLION = 1000000000.0;
+	public final static double MILLION = 1000000.0;
+	
 	public static void main(String[] args) throws IOException, URISyntaxException {
 
 		if (args.length < 2) {
@@ -30,6 +35,10 @@ public class Spark2Screener1 {
 			System.exit(1);
 		}
 
+		// For summary reports
+		//HashMap<String, Integer> sectorCompanyCount = new HashMap<String, Integer>();
+		//HashMap<String, Double> sectorCapTotal = new HashMap<String, Double>();
+		
 		// setup job configuration and context
 		SparkConf sparkConf = new SparkConf().setAppName("Stock Screener with Spark");
 		sparkConf.setMaster("local");
@@ -55,13 +64,22 @@ public class Spark2Screener1 {
 				String sectorStr = tokens[sectorIndex];
 				String capStr = tokens[capIndex].replace("\"", "");
 				String[] finalTokens=new String[1];
-				
+			
+				/** For Billion cap companies
 				if (tokens.length != 9 || symbol.equalsIgnoreCase("Symbol") || tokens[sectorIndex].equalsIgnoreCase("Sector") 
 						|| sectorStr.equalsIgnoreCase(NO_INFO) || !capStr.endsWith("B")) {
 					finalTokens[0] = "";
 				}
 				else
 					finalTokens[0] = s; // PASS IT ON
+					***/
+				if ( sectorStr.equalsIgnoreCase("\"Sector\"") || sectorStr.equalsIgnoreCase(NO_INFO)
+						|| symbol.equalsIgnoreCase("\"Symbol\"") || capStr.endsWith("B") ) {		
+					finalTokens[0] = "";
+				}
+				else
+					finalTokens[0] = s; // PASS IT ON
+				
 				return Arrays.asList(finalTokens);
 			}
 		});
@@ -71,23 +89,43 @@ public class Spark2Screener1 {
 			private final static String recordRegex = ",(?=([^\"]*\"[^\"]*\")*[^\"]*$)";
 			private final static int sectorIndex = 5;
 			private final static int capIndex = 3;
-			public final static String NO_INFO = "n/a";
-			private final double BILLION = 1000000000.0;
+			
+			// For summary reports
+			public HashMap<String, Integer> sectorCompanyCount = new HashMap<String, Integer>();
+			public HashMap<String, Double> sectorCapTotal = new HashMap<String, Double>();
+			
 			@Override
 			public Tuple2<String, String> call(String value) throws Exception {
 				if (value == null || value.isEmpty())
 					return new Tuple2<String, String>("","");
-				
+
+				//logger.info("stock=["+value);
 				String[] tokens = value.toString().split(recordRegex, -1);
 				String symbol = tokens[0];
 				String sectorStr = tokens[5];
-				String capStr = tokens[capIndex].replace("\"", "");
-				capStr = (capStr.substring(1, capStr.length())).replaceAll("B", "");
-				double finalCap = new Double(capStr);
-				String finalValue= symbol + "===" + finalCap * BILLION;
+				String capStr = tokens[capIndex].indexOf(NO_INFO)>-1?"0.00": tokens[capIndex].replace("\"", "");
+				capStr = (capStr.substring(1, capStr.length())).replaceAll("M", "");
+
+				double finalCap =  new Double(capStr);
 				
-				logger.info("Tuple2 call() tokens=["+ tokens);
-				return new Tuple2<String, String>(sectorStr,finalValue);
+				Integer companyCount = sectorCompanyCount.get(sectorStr);
+				Double capTotal = sectorCapTotal.get(sectorStr);
+				
+				if (companyCount == null)
+					companyCount=1;
+				else 
+					++companyCount;
+
+				sectorCompanyCount.put(sectorStr, companyCount);
+				
+				if (capTotal == null)
+					capTotal = finalCap * MILLION;
+				else 
+					capTotal += finalCap * MILLION;
+				
+				sectorCapTotal.put(sectorStr, capTotal);
+				
+				return new Tuple2<String, String>(sectorStr,symbol + separator +companyCount+ separator +capTotal);
 			}
 		});
 
@@ -99,20 +137,25 @@ public class Spark2Screener1 {
 		JavaPairRDD<String, String> counts = pairs.reduceByKey(new Function2<String, String, String>() {
 			private double sectorTotalCap = 0.0;
 			private int companyCount = 0;
-			final String separator = "===";
+			//final String separator = "===";
 			final String companyCountStr = "\nTotal Companies: ";
 			final String sectorTotalCapStr = "\nTotal Market Cap: ";
 
 			@Override
 			public String call(String a, String b) throws Exception {
-				logger.info("reduceByKey a=[" + a + "] b=["+ b);
+				//logger.info("reduceByKey a=[" + a + "] b=["+ b);
 				if (a.isEmpty() && b.isEmpty())
 					return "";
 				else
 				{	
 					String aSymbol = parseSymbolAddCap(a);
 					String bSymbol = parseSymbolAddCap(b);
-					return updateSummaryForSector(aSymbol, bSymbol);
+					String mergedString = updateSummaryForSector(aSymbol, bSymbol);
+					
+					//Need clean up the cache for calculating other sectors
+					sectorTotalCap = 0.0;
+					companyCount = 0;
+					return mergedString;
 				}
 			}
 			private String updateSummaryForSector(String a, String bSymbol)
@@ -142,11 +185,18 @@ public class Spark2Screener1 {
 				String symbol = "";
 				String[] symbolDetails = value.toString().split(separator);
 				
-				String capStr = symbolDetails[1];
+				String capStr = symbolDetails[2];
+				String companyCntStr = symbolDetails[1];
 				symbol = symbolDetails[0];
 				
-				sectorTotalCap += new Double(capStr);
-				companyCount++;
+				Double tempSectorTotalCap = new Double(capStr);
+				Integer tempCompanyCount = new Integer(companyCntStr);
+				
+				if (companyCount <=tempCompanyCount) //start storing the largest count for reporting
+				{
+					companyCount = tempCompanyCount;
+					sectorTotalCap = tempSectorTotalCap;
+				}
 				
 				return symbol;
 			}
