@@ -84,6 +84,7 @@ public class MR2Screener1 {
 		private final static int capIndex = 3;
 		public final static String NO_INFO = "n/a";
 		private final double BILLION = 1000000000.0;
+		private final double MILLION = 1000000.0;
 
 		/*-
 		 * This function splits each input line into an array of words.
@@ -101,14 +102,31 @@ public class MR2Screener1 {
 			// logger.info("Token len=" + tokens.length + " sector=[" +
 			// sectorStr + "] capStr=[" + capStr);
 
+			/*** If Billion cap companies are included
 			if (tokens.length == 9 && !tokens[1].equalsIgnoreCase("Sector") && !sectorStr.equalsIgnoreCase(NO_INFO)
-					&& capStr.endsWith("B")) {
+					&& capStr.endsWith("B")) {		// used if Billion cap companies are excluded
 				capStr = (capStr.substring(1, capStr.length())).replaceAll("B", "");
 				double finalCap = new Double(capStr);
 				context.write(new Text(sectorStr), new Text(symbol + "===" + finalCap * BILLION));
 				// logger.info("Found a B-company");
 				context.getCounter(SECTOR_COUNT_LABEL, sectorStr).increment(1);
 				context.getCounter(SECTOR_COUNT_LABEL, "Total Billion Companies processed successfully").increment(1);
+			}
+			***/
+			// used if Billion cap companies are excluded
+			if (tokens.length == 9 && !sectorStr.equalsIgnoreCase("\"Sector\"") && !sectorStr.equalsIgnoreCase(NO_INFO)
+					&& !symbol.equalsIgnoreCase("\"Symbol\"") && !capStr.endsWith("B") ) {		
+				double finalCap = 0;
+				
+				if (!capStr.equalsIgnoreCase(NO_INFO))
+				{
+					capStr = (capStr.substring(1, capStr.length())).replaceAll("M", "");
+					finalCap = new Double(capStr);
+				}
+				context.write(new Text(sectorStr), new Text(symbol + "===" + finalCap * MILLION));
+				// logger.info("Found a M-company");
+				context.getCounter(SECTOR_COUNT_LABEL, sectorStr).increment(1);
+				context.getCounter(SECTOR_COUNT_LABEL, "Total Non-Billion Companies processed successfully").increment(1);
 			}
 			context.getCounter(SECTOR_COUNT_LABEL, "Total companies attempted").increment(1);
 		}
