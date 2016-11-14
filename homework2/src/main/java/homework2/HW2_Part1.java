@@ -1,11 +1,22 @@
 package homework2;
 
+import java.io.Serializable;
+import java.io.StringReader;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.api.java.function.FlatMapFunction;
+import org.apache.spark.api.java.function.PairFunction;
+
+import Stocks.Spark2Screener1;
+import au.com.bytecode.opencsv.CSVReader;
+import scala.Tuple2;
 
 /**
  * Part 1 - Extract the information we want from the file
@@ -28,18 +39,30 @@ import org.apache.spark.api.java.JavaSparkContext;
  * 
  * ----------------------------------------
  * 
- * @author <enter your name here>
+ * @author SIMING MENG
  *
  */
 public class HW2_Part1 {
-
+	static Logger logger = Logger.getLogger(HW2_Part1.class);
 	private final static String recordRegex = ",";
 	private final static Pattern REGEX = Pattern.compile(recordRegex);
-
+	
+	private static final int SYMBOL_INDEX = 0;
+	private static final int DIVIDEND_INDEX = 4;
+	private static final int PE_INDEX = 5;
 	/*
 	 * TODO initialize the indices for parsing - symbol is at index 0, dividend is at index 4, price-earnings is at
 	 * index 5
 	 */
+	public static class ParseLine implements PairFunction<String, String, String[]> {
+		@Override
+		public Tuple2<String, String[]> call(String line) throws Exception {
+			CSVReader reader = new CSVReader(new StringReader(line));
+			String[] elements = reader.readNext();
+			String key = elements[0];
+			return new Tuple2<String, String[]>(key, elements);
+		}
+	}
 
 	/*
 	 * TODO initialize a String for representing non-existent information
@@ -124,6 +147,15 @@ public class HW2_Part1 {
 		 * JavaRDD<Tuple3<String, String, String>> stockInfo = lines .map(new Function<String, Tuple3<String, String,
 		 * String>>() {
 		 */
+		JavaRDD<String> symbol = lines.flatMap(new FlatMapFunction<String, String>() {
+			@Override
+			public Iterable<String> call(String s) throws Exception {
+				// initial screen
+				logger.info("Iterable<String> call(String s) s=["+s);
+				
+				return Arrays.asList(finalTokens);
+			}
+		});
 
 		/*-
 		 * TODO Filter out invalid records 
