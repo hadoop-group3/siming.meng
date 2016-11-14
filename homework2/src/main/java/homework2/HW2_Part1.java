@@ -33,7 +33,7 @@ import org.apache.spark.api.java.JavaSparkContext;
  */
 public class HW2_Part1 {
 
-	private final static String recordRegex = ","; 
+	private final static String recordRegex = ",";
 	private final static Pattern REGEX = Pattern.compile(recordRegex);
 
 	/*
