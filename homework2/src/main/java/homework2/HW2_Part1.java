@@ -9,12 +9,13 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.api.java.function.PairFunction;
 
-import Stocks.Spark2Screener1;
+//import Stocks.Spark2Screener1;
 import au.com.bytecode.opencsv.CSVReader;
 import scala.Tuple2;
 
@@ -54,7 +55,7 @@ public class HW2_Part1 {
 	 * TODO initialize the indices for parsing - symbol is at index 0, dividend is at index 4, price-earnings is at
 	 * index 5
 	 */
-	public static class ParseLine implements PairFunction<String, String, String[]> {
+	private static class ParseLine implements PairFunction<String, String, String[]> {
 		@Override
 		public Tuple2<String, String[]> call(String line) throws Exception {
 			CSVReader reader = new CSVReader(new StringReader(line));
@@ -86,7 +87,7 @@ public class HW2_Part1 {
 	 * 
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		/*
 		 * Validate that two arguments were passed from the command line.
 		 */
@@ -99,15 +100,12 @@ public class HW2_Part1 {
 			System.out.printf("Example: data/companies/SP500-constituents-financials.csv output/hw2_1 \n");
 			System.exit(-1);
 		}
+		HW2_Part1 part1 = new HW2_Part1();
+		part1.run( args);
 
-		/*
-		 * setup job configuration and context
-		 */
-		SparkConf conf = new SparkConf().set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
-		conf.setMaster("local");
-		conf.setAppName("HW2 Part 1");
-		JavaSparkContext sc = new JavaSparkContext(conf);
-
+	}
+	
+	public void run(String[] args) throws Exception {
 		/*
 		 * setup output
 		 */
@@ -117,6 +115,14 @@ public class HW2_Part1 {
 		 * TODO setup accumulators for counting records - for instance, you may want to count valid records, invalid
 		 * records, the number of records with no dividend supplied, etc.
 		 */
+
+		/*
+		 * setup job configuration and context
+		 */
+		SparkConf conf = new SparkConf().set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
+		conf.setMaster("local");
+		conf.setAppName("HW2 Part 1");
+		JavaSparkContext sc = new JavaSparkContext(conf);
 
 		/*
 		 * Read the lines in a file
@@ -147,15 +153,33 @@ public class HW2_Part1 {
 		 * JavaRDD<Tuple3<String, String, String>> stockInfo = lines .map(new Function<String, Tuple3<String, String,
 		 * String>>() {
 		 */
-		JavaRDD<String> symbol = lines.flatMap(new FlatMapFunction<String, String>() {
+		
+		//JavaRDD<String> csvWithQuotesRecords = sc.textFile(csvWithQuotesFile);
+		JavaRDD<String> csvRecords = lines;
+		JavaPairRDD<String, String[]> keyedRDD1 = csvRecords.mapToPair(new ParseLine());
+		//JavaPairRDD<String, String[]> keyedRDD2 = csvWithQuotesRecords.mapToPair(new ParseLine());
+
+		/**
+		JavaPairRDD<String, String[]> pairs = lines.mapToPair(new ParseLine<String, String, String[]>() {
+			private final static String recordRegex = ",";
+			
 			@Override
-			public Iterable<String> call(String s) throws Exception {
-				// initial screen
-				logger.info("Iterable<String> call(String s) s=["+s);
-				
-				return Arrays.asList(finalTokens);
-			}
-		});
+			public Tuple2<String, String[]> call(String value) throws Exception {
+				if (value == null || value.isEmpty())
+					return new Tuple2<String, String[]>("",null);
+					
+				String[] symbolDetails= value.split(recordRegex);
+				if (symbolDetails.length==0 || symbolDetails[SYMBOL_INDEX].equalsIgnoreCase("symbol"))
+					return new Tuple2<String, String[]>("",null);
+					
+				String[] details = new String[3];
+				details[0] = symbolDetails[SYMBOL_INDEX];
+				details[1] = symbolDetails[DIVIDEND_INDEX];
+				details[2] = symbolDetails[PE_INDEX];
+				return new Tuple2<String, String[]>(details[0], details);
+ 			}
+		});**/
+		
 
 		/*-
 		 * TODO Filter out invalid records 
