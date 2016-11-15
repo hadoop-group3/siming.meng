@@ -61,6 +61,36 @@ public class HW2_Part1 {
 			CSVReader reader = new CSVReader(new StringReader(line));
 			String[] elements = reader.readNext();
 			String key = elements[0];
+			
+			String[] symbolDetails= elements;
+			if (symbolDetails.length==0 || symbolDetails[SYMBOL_INDEX].equalsIgnoreCase("symbol"))
+				return new Tuple2<String, String[]>("",null);
+				
+			String[] details = new String[3];
+			details[0] = symbolDetails[SYMBOL_INDEX];
+			
+			if (symbolDetails[DIVIDEND_INDEX] == null )
+				details[1] = "null";
+			else if (symbolDetails[DIVIDEND_INDEX].isEmpty())
+				details[1] = "0.0";
+			else
+				details[1] = symbolDetails[DIVIDEND_INDEX];
+			
+			if (symbolDetails[PE_INDEX] == null )
+				details[2] = "null";
+			else if (symbolDetails[PE_INDEX].isEmpty())
+				details[2] = ""+Float.NEGATIVE_INFINITY;
+			else
+				details[2] = symbolDetails[PE_INDEX];
+			
+			try {
+				Float div = Float.parseFloat(details[1]);
+				Float pe = Float.parseFloat(details[2]);
+			}
+			catch (NumberFormatException nfe){
+				logger.error("NumberFormatException:");
+				return new Tuple2<String, String[]>("",null);
+			}
 			return new Tuple2<String, String[]>(key, elements);
 		}
 	}
@@ -158,6 +188,12 @@ public class HW2_Part1 {
 		JavaRDD<String> csvRecords = lines;
 		JavaPairRDD<String, String[]> keyedRDD1 = csvRecords.mapToPair(new ParseLine());
 		//JavaPairRDD<String, String[]> keyedRDD2 = csvWithQuotesRecords.mapToPair(new ParseLine());
+		
+		keyedRDD1.cache();
+		
+		logger.info("--->Number of valid records for SP500:  " + keyedRDD1.count());
+		//for (Tuple2<String, Float> element : keyedRDD1)
+			//System.out.println(element._1 + "," + element._2);
 
 		/**
 		JavaPairRDD<String, String[]> pairs = lines.mapToPair(new ParseLine<String, String, String[]>() {
