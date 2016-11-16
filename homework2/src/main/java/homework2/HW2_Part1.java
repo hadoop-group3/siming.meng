@@ -9,16 +9,14 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
-import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.FlatMapFunction;
-import org.apache.spark.api.java.function.PairFunction;
+
 import org.apache.spark.api.java.function.Function;
 
 //import Stocks.Spark2Screener1;
 import au.com.bytecode.opencsv.CSVReader;
-import scala.Tuple2;
 import scala.Tuple3;
 
 /**
