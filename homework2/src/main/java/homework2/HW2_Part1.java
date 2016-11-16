@@ -53,49 +53,6 @@ public class HW2_Part1 implements Serializable {
 	private static final int SYMBOL_INDEX = 0;
 	private static final int DIVIDEND_INDEX = 4;
 	private static final int PE_INDEX = 5;
-	/*
-	 * TODO initialize the indices for parsing - symbol is at index 0, dividend is at index 4, price-earnings is at
-	 * index 5
-	 */
-	private static class ParseLine implements PairFunction<String, String, String[]> {
-		@Override
-		public Tuple2<String, String[]> call(String line) throws Exception {
-			CSVReader reader = new CSVReader(new StringReader(line));
-			String[] elements = reader.readNext();
-			String key = elements[0];
-			
-			String[] symbolDetails= elements;
-			if (symbolDetails.length==0 || symbolDetails[SYMBOL_INDEX].equalsIgnoreCase("symbol"))
-				return new Tuple2<String, String[]>("",null);
-				
-			String[] details = new String[3];
-			details[0] = symbolDetails[SYMBOL_INDEX];
-			
-			if (symbolDetails[DIVIDEND_INDEX] == null )
-				details[1] = "null";
-			else if (symbolDetails[DIVIDEND_INDEX].isEmpty())
-				details[1] = "0.0";
-			else
-				details[1] = symbolDetails[DIVIDEND_INDEX];
-			
-			if (symbolDetails[PE_INDEX] == null )
-				details[2] = "null";
-			else if (symbolDetails[PE_INDEX].isEmpty())
-				details[2] = ""+Float.NEGATIVE_INFINITY;
-			else
-				details[2] = symbolDetails[PE_INDEX];
-			
-			try {
-				Float div = Float.parseFloat(details[1]);
-				Float pe = Float.parseFloat(details[2]);
-			}
-			catch (NumberFormatException nfe){
-				logger.error("NumberFormatException:");
-				return new Tuple2<String, String[]>("",null);
-			}
-			return new Tuple2<String, String[]>(key, elements);
-		}
-	}
 
 	/*
 	 * TODO initialize a String for representing non-existent information
@@ -185,11 +142,8 @@ public class HW2_Part1 implements Serializable {
 		 * JavaRDD<Tuple3<String, String, String>> stockInfo = lines .map(new Function<String, Tuple3<String, String,
 		 * String>>() {
 		 */
-		
-		//JavaRDD<String> csvWithQuotesRecords = sc.textFile(csvWithQuotesFile);
+
 		JavaRDD<String> csvRecords = lines;
-		//JavaPairRDD<String, String[]> keyedRDD1 = csvRecords.mapToPair(new ParseLine());
-		//keyedRDD1.cache();
 		
 		JavaRDD<Tuple3<String, String, String>> stockInfo = csvRecords.flatMap(new FlatMapFunction<String, Tuple3<String, String,String>>() {
 			@Override
@@ -214,25 +168,11 @@ public class HW2_Part1 implements Serializable {
 					details[2] = ""+Float.NEGATIVE_INFINITY;
 				else
 					details[2] = symbolDetails[PE_INDEX];
-				/**
-				try {
-					Float div = Float.parseFloat(details[1]);
-					Float pe = Float.parseFloat(details[2]);
-					
-					return Arrays.asList( new Tuple3<String, String, String>(details[0], details[1], details[2]));
-				}
-				catch (NumberFormatException nfe){
-					logger.error("NumberFormatException:");
-					
-				}
-				**/
+
 				return Arrays.asList( new Tuple3<String, String, String>(details[0],details[1],details[2]));
 			}
 		});
 		
-		logger.info("--->Number of valid records for SP500:  " + stockInfo.count());
-
-
 		/*-
 		 * TODO Filter out invalid records 
 		 * 
@@ -240,11 +180,7 @@ public class HW2_Part1 implements Serializable {
 		 * - filter out the header
 		 * 
 		 * - use the filter as an opportunity to count valid and invalid records
-		 *
-		 * Your filter may start like this:
-		 * 
-		 * JavaRDD<Tuple3<String, String, String>> filteredInfo = stockInfo
-		 *		.filter(new Function<Tuple3<String, String, String>, Boolean>() {
+
 		 */
 		 JavaRDD<Tuple3<String, String, String>> filteredInfo = stockInfo.filter(new Function<Tuple3<String, String, String>, Boolean>() {
 			 @Override
@@ -274,16 +210,6 @@ public class HW2_Part1 implements Serializable {
 		 * This is just so the output list is easier to read/decipher. Note, it does initiate a "wide-transformation"
 		 * 
 		 * --- this sortBy implementation worked for me... -------------
-		 *
-		 * JavaRDD<Tuple3<String, String, String>> sortedInfo = filteredInfo
-		 *		.sortBy(new Function<Tuple3<String, String, String>, String>() {
-		 *
-		 *			@Override
-		 *			public String call(Tuple3<String, String, String> info) throws Exception {
-		 *				return info._1();
-		 *			}
-		 *
-		 *		}, true, 1);
 		 */
 		 
 		 JavaRDD<Tuple3<String, String, String>> sortedInfo = filteredInfo.sortBy(new Function<Tuple3<String, String, String>, String>() {
@@ -310,6 +236,7 @@ public class HW2_Part1 implements Serializable {
 		 */
 		 
 		 logger.info("Valid records:  " + sortedInfo.count());
+		 System.out.println("Valid records:  " + sortedInfo.count() );
 
 		/*
 		 * bye
