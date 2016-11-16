@@ -46,6 +46,8 @@ public class HW2_Part2 implements Serializable {
 	}
 
 	private static final int DIVIDEND_INDEX = 4;
+	private static final int YEARLY_LOW_INDEX = 8;
+	private static final int YEARLY_HIGH_INDEX = 9;
 
 	public static void main(String[] args) throws Exception {
 		/*
@@ -65,7 +67,6 @@ public class HW2_Part2 implements Serializable {
 
 	}
 	public void run(String[] args) throws Exception {
-
 		String csvFile = args[0];
 		String csvWithQuotesFile = args[1];
 		SparkConf conf = new SparkConf().set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
@@ -81,10 +82,17 @@ public class HW2_Part2 implements Serializable {
 		JavaPairRDD<String, Tuple2<String[], String[]>> joinResults = keyedRDD1.join(keyedRDD2);
 
 		joinResults.cache();
+		
 
 		// answer to question: how many stocks in SP500 are on the NASDAQ
-		System.out.println("Number of records on both the NASDAQ and the SP500:  " + joinResults.count());
-
+		int totalSymbolsOnBothMarket = (int) joinResults.count();
+		System.out.println("Number of records on both the NASDAQ and the SP500:  " + totalSymbolsOnBothMarket);
+		// print symbols on both markets
+		List<Tuple2<String, Tuple2<String[], String[]>>> allSymbols = joinResults.collect();
+		int commonStockCounter=0;
+		for (Tuple2<String, Tuple2<String[], String[]>> symbol : allSymbols)
+			System.out.println("Common stock[" + ++commonStockCounter + "]:" + symbol._1 );
+		
 		JavaPairRDD<String, Float> dividends = joinResults.mapValues(x -> {
 			try {
 				return Float.valueOf(x._1()[DIVIDEND_INDEX]);
