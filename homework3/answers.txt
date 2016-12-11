@@ -1,0 +1,133 @@
+HW3 Part1
+Q1. Solve this problem:
+All you know about the winner is that the first name is Brian and he lives in Chicago. Use Hive's
+LIKE operator to do a wildcard search for names such as "Bryan” and “Brian”. Remember to filter
+on the customer's city.
+
+Query:
+hive> SELECT  customer_id, customer_fname, customer_lname, customer_city
+    > FROM customers
+    > WHERE customer_city = 'Chicago' AND customer_fname LIKE 'Br%';
+OK
+
+Outcome:
+customer_id	customer_fname	customer_lname	customer_city
+2303	Brittany	Smith	Chicago
+5002	Bryan	Smith	Chicago
+6429	Brian	Wilson	Chicago
+9751	Brenda	Pollard	Chicago
+Time taken: 2.533 seconds, Fetched: 4 row(s)
+hive> 
+
+Q2. There are reports of at least 2 different products with a price of $0. You will now run a
+query to identify the products that currently have the lowest prices.
+Query:
+[cloudera@quickstart ~]$ hive -e 'SELECT product_price, product_name FROM PRODUCTS WHERE product_price = 0 ORDER BY product_price LIMIT 10'
+
+Outcome:
+0.0	Nike Men's Hypervenom Phantom Premium FG Socc
+0.0	Callaway X Hot Driver
+
+Q3. How many customers ids are in the customers table?
+Query:
+SELECT count(distinct( concat(customer_street , customer_city, customer_zipcode)))
+FROM customers ;
+
+Outcome:
+12435
+
+Q4. How many customers ids are in the customers table?
+Query:
+SELECT   distinct( concat(customer_street , customer_city, customer_zipcode))
+FROM customers limit 10;
+
+Outcome:
+11508
+
+Q5. Using customer_id, which state has the most customers? Hint: notice, you can group
+by one field and then order by another.
+Query:
+SELECT   count( customer_id) as customer_count,customer_state 
+FROM customers
+GROUP BY customer_state
+ORDER BY customer_count desc;
+
+Outcome:
+ 	customer_count	customer_state
+1	4771	PR
+2	2012	CA
+3	775		NY
+4	635		TX
+5	523		IL
+6	374		FL
+......
+
+Q6. Which top three product_ids had the most orders?
+Query:
+SELECT  sum( order_item_quantity) as ttl_qty, order_item_product_id as id, products.product_name as p_name
+FROM order_items, products
+where order_items.order_item_product_id = products.product_id
+GROUP BY  order_item_product_id,  products.product_name
+ORDER BY ttl_qty DESC;
+
+Outcome:
+ 	ttl_qty	id	p_name
+1	73698	365	Perfect Fitness Perfect Rip Deck
+2	62956	502	Nike Men's Dri-FIT Victory Golf Polo
+3	57803	1014 O'Brien Men's Neoprene Life Vest
+
+Q7.
+Query:
+
+Outcome:
+
+Q8.
+Query:
+
+Outcome:
+
+Q9.
+Query:
+
+Outcome:
+
+Q.
+Query:
+
+Outcome:
+Q.
+Query:
+
+Outcome:
+Q.
+Query:
+
+Outcome:
+Q.
+Query:
+
+Outcome:
+Q.
+Query:
+
+Outcome:
+Q.
+Query:
+
+Outcome:
+Q.
+Query:
+
+Outcome:
+Q.
+Query:
+
+Outcome:
+Q.
+Query:
+
+Outcome:
+Q.
+Query:
+
+Outcome:
