@@ -139,31 +139,60 @@ Outcome:
 	prod_id		int	
 	rating		tinyint	
 
-Q.
+Q. Finally, count the records in the ratings table to ensure that all 21,997 are available. how many ratings are there?
+Query:
+SELECT COUNT(*) FROM ratings;
+
+Outcome:
+21997
+
+Create the following queries:
+Q1.Select the HOME phone number
+Query:
+SELECT phone["HOME"] FROM loyalty_program
+WHERE cust_id = 1200866;
+
+Outcome:
+408-555-4914
+
+Q2.Select the third element from the order_ids array for customer ID 1200866
+Query:
+SELECT order_ids[2] FROM loyalty_program
+WHERE cust_id = 1200866;
+
+Outcome:
+5278505
+
+Q3.Select the total attribute from the order_value struct for customer ID 1200866
+Query:
+SELECT order_value.total FROM loyalty_program
+WHERE cust_id = 1200866;
+
+Outcome:
+401874
+
+Alter and Drop a Table
+Q1.Use ALTER TABLE to rename the level column to status .
 Query:
 
 Outcome:
-Q.
+Q2.Use the DESCRIBE command on the loyalty_program table to verify the change.
 Query:
 
 Outcome:
-Q.
+Q3.Use ALTER TABLE to rename the entire table to reward_program.
 Query:
 
 Outcome:
-Q.
+
+Q4.Although the ALTER TABLE command often requires that we make a corresponding change to
+the data in HDFS, renaming a table or column does not.
 Query:
 
 Outcome:
-Q.
-Query:
 
-Outcome:
-Q.
-Query:
-
-Outcome:
-Q.
+Q5.As sometimes happens in the corporate world, priorities have shifted and the program is now
+canceled. Drop the reward_program table.
 Query:
 
 Outcome:
