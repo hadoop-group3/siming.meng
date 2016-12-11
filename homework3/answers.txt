@@ -174,29 +174,42 @@ Outcome:
 Alter and Drop a Table
 Q1.Use ALTER TABLE to rename the level column to status .
 Query:
+ALTER TABLE loyalty_program CHANGE level status String;
 
-Outcome:
+Outcome: Success.
+
 Q2.Use the DESCRIBE command on the loyalty_program table to verify the change.
 Query:
+describe loyalty_program;
 
 Outcome:
+ 	col_name	data_type	comment
+	cust_id		int	
+	email		string	
+	fname		string	
+	lname		string	
+	order_ids	array<int>	
+	order_value	struct<min:int,max:int,avg:int,total:int>	
+	phone		map<string,string>	
+	status		string
+
 Q3.Use ALTER TABLE to rename the entire table to reward_program.
 Query:
+ALTER TABLE loyalty_program RENAME TO reward_program;
 
-Outcome:
+Outcome: Success.
 
 Q4.Although the ALTER TABLE command often requires that we make a corresponding change to
 the data in HDFS, renaming a table or column does not.
 Query:
+SELECT status FROM reward_program WHERE cust_id = 1200866;
 
 Outcome:
+SILVER
 
 Q5.As sometimes happens in the corporate world, priorities have shifted and the program is now
 canceled. Drop the reward_program table.
 Query:
+DROP TABLE IF EXISTS  reward_program;
 
-Outcome:
-Q.
-Query:
-
-Outcome:
+Outcome:Success
