@@ -1,4 +1,5 @@
 HW3 Part1
+---------------------------------------------------------------------------------------------------------------------------------------------
 Q1. Solve this problem:
 All you know about the winner is that the first name is Brian and he lives in Chicago. Use Hive's
 LIKE operator to do a wildcard search for names such as "Bryan” and “Brian”. Remember to filter
@@ -64,41 +65,80 @@ Outcome:
 
 Q6. Which top three product_ids had the most orders?
 Query:
-SELECT  sum( order_item_quantity) as ttl_qty, order_item_product_id as id, products.product_name as p_name
+SELECT  sum( order_item_quantity) as ttl_qty, order_item_product_id as pid, products.product_name as p_name
 FROM order_items, products
 where order_items.order_item_product_id = products.product_id
 GROUP BY  order_item_product_id,  products.product_name
 ORDER BY ttl_qty DESC;
 
 Outcome:
- 	ttl_qty	id	p_name
+ 	ttl_qty	pid	p_name
 1	73698	365	Perfect Fitness Perfect Rip Deck
 2	62956	502	Nike Men's Dri-FIT Victory Golf Polo
 3	57803	1014 O'Brien Men's Neoprene Life Vest
 
-Q7.
+Q7.Using the orders_corrected table, count the number of orders (using order_id) that
+had a status of COMPLETE, on May 17, 2014. Show your query.
 Query:
+select count(order_id)
+FROM orders_corrected 
+WHERE order_status = 'COMPLETE' AND year(order_datestr)=2014 AND month(order_datestr)=5 AND day(order_datestr)=17;
 
 Outcome:
+61
 
-Q8.
+Q8. What was Dualcore’s total revenue from completed orders on May 17, 2014? 
 Query:
+SELECT  sum(order_item_subtotal) as total
+FROM order_items
+WHERE order_items.order_item_order_id IN 
+    (SELECT order_id AS order_item_order_id FROM orders_corrected  
+     WHERE order_status = 'COMPLETE' 
+     AND year(order_datestr)=2014 AND month(order_datestr)=5 AND day(order_datestr)=17);
 
 Outcome:
+29198.830507278442
 
-Q9.
+Q9.The result of the above query is in scientific notation. Rewrite the last query to format the value
+in dollars and cents (e.g., $2000000.00).
 Query:
+SELECT  printf("$%.2f", sum(order_item_subtotal)) as total
+FROM order_items
+WHERE order_items.order_item_order_id IN 
+    (SELECT order_id AS order_item_order_id FROM orders_corrected  
+     WHERE order_status = 'COMPLETE' 
+     AND year(order_datestr)=2014 AND month(order_datestr)=5 AND day(order_datestr)=17);
+	 
+Outcome:
+$29198.83
+
+HW3 Part2
+---------------------------------------------------------------------------------------------------------------------------------------------
+Q.Create a table named ratings for storing tab-delimited records using this structure:
+Query:
+CREATE TABLE IF NOT EXISTS ratings (
+	posted TIMESTAMP, 
+	cust_id INT, 
+	prod_id INT, 
+	rating TINYINT, 
+	message STRING) 
+COMMENT 'Ratings table'
+ROW FORMAT DELIMITED 
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n';
 
 Outcome:
+Success
 
-Q.
-Query:
-
+Q. DESCRIBE ratings;
 Outcome:
-Q.
-Query:
+ 	col_name	data_type	comment
+	cust_id		int	
+	message		string	
+	posted		timestamp	
+	prod_id		int	
+	rating		tinyint	
 
-Outcome:
 Q.
 Query:
 
