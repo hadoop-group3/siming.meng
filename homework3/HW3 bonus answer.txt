@@ -1,0 +1,30 @@
+*********************************************************************************************************************************************
+* Hadoop Homework 3 Bonus Question
+* Author: Siming Meng
+*********************************************************************************************************************************************
+
+On your VM, in the datasets directory, there is a file called access_log.gz and it contains
+compressed log entries.
+Create a table, using RegexSerde, to load this file into Hive. Your new table should contain
+entries for IP address, date_and_time, request, response and bytes_read.
+Bonus question: Show the query you ran to create the table.
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+DROP TABLE IF EXISTS access_log;
+
+CREATE TABLE IF NOT EXISTS access_log (
+        `ip`                STRING,
+        `time_local`        STRING,
+        `method`            STRING,
+        `uri`               STRING,
+        `protocol`          STRING,
+        `status`            STRING,
+        `bytes_sent`        STRING
+        )
+    ROW FORMAT SERDE 'org.apache.hadoop.hive.contrib.serde2.RegexSerDe'
+    WITH SERDEPROPERTIES (
+    'input.regex'='^(\\S+) \\S+ \\S+ \\[([^\\[]+)\\] "(\\w+) (\\S+) (\\S+)" (\\d+) (\\d+)'
+);
+
+LOAD DATA LOCAL INPATH '/home/cloudera/Desktop/datasets/access_log'
+OVERWRITE INTO TABLE access_log;
