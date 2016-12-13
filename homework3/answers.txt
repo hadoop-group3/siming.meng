@@ -1,3 +1,7 @@
+*********************************************************************************************************************************************
+* Hadoop Homework 3
+* Author: Siming Meng
+*********************************************************************************************************************************************
 HW3 Part1
 ---------------------------------------------------------------------------------------------------------------------------------------------
 Q1. Solve this problem:
@@ -13,10 +17,10 @@ OK
 
 Outcome:
 customer_id	customer_fname	customer_lname	customer_city
-2303	Brittany	Smith	Chicago
-5002	Bryan	Smith	Chicago
-6429	Brian	Wilson	Chicago
-9751	Brenda	Pollard	Chicago
+2303		Brittany		Smith			Chicago
+5002		Bryan			Smith			Chicago
+6429		Brian			Wilson			Chicago
+9751		Brenda			Pollard			Chicago
 Time taken: 2.533 seconds, Fetched: 4 row(s)
 hive> 
 
