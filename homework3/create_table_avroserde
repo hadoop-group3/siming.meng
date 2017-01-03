@@ -1,0 +1,42 @@
+CREATE EXTERNAL TABLE categories
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+LOCATION 'hdfs:///user/hive/warehouse/categories'
+TBLPROPERTIES ('avro.schema.url'='hdfs:///user/examples/categories.avsc');
+
+CREATE EXTERNAL TABLE customers
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+LOCATION 'hdfs:///user/hive/warehouse/customers'
+TBLPROPERTIES ('avro.schema.url'='hdfs:///examples/customers.avsc');
+
+CREATE EXTERNAL TABLE departments
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+LOCATION 'hdfs:///user/hive/warehouse/departments'
+TBLPROPERTIES ('avro.schema.url'='hdfs:///user/examples/departments.avsc');
+
+CREATE EXTERNAL TABLE orders
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+LOCATION 'hdfs:///user/hive/warehouse/orders'
+TBLPROPERTIES ('avro.schema.url'='hdfs:///user/examples/orders.avsc');
+
+CREATE EXTERNAL TABLE order_items
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+LOCATION 'hdfs:///user/hive/warehouse/order_items'
+TBLPROPERTIES ('avro.schema.url'='hdfs:///user/examples/order_items.avsc');
+
+CREATE EXTERNAL TABLE products
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+LOCATION 'hdfs:///user/hive/warehouse/products'
+TBLPROPERTIES ('avro.schema.url'='hdfs:///user/examples/products.avsc');
+
